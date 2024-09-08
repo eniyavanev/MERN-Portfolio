@@ -1,8 +1,9 @@
+// Error handling middleware (errorMiddleware.js)
 const notFound = (req, res, next) => {
-  const error = new Error(`Not Found - ${req.originalUrl}`);
-  res.staus(404);
-  next(error);
+  res.status(404); // Corrected 'staus' to 'status'
+  next(new Error(`Not Found - ${req.originalUrl}`));
 };
+
 
 const errorHandler = (err, req, res, next) => {
   let statuscode = res.statusCode === 200 ? 500 : res.statusCode;

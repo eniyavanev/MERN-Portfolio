@@ -1,6 +1,9 @@
 import jwt from "jsonwebtoken";
 import User from "../Models/userModel.js";
 import expressAsyncHandler from "express-async-handler";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const checkToken = expressAsyncHandler(async (req, res, next) => {
   let token = req.cookies.token;
@@ -10,9 +13,9 @@ const checkToken = expressAsyncHandler(async (req, res, next) => {
     
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-      //console.log("Decoded token:", decoded); // Log the decoded token
+      console.log("Decoded token:", decoded); // Log the decoded token
 
-      req.user = await User.findById(decoded.id).select("-password");
+      req.user = await User.findById(decoded.userId).select("-password");
       //console.log("User found:", req.user); // Log the user found by ID
 
       if (!req.user) {

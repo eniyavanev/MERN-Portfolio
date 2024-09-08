@@ -5,6 +5,8 @@ import {
   logoutUser,
   getUserProfile,
   updateUserProfile,
+  forgetPassword,
+  resetPassword,
 } from "../Controller/userController.js";
 import { checkToken } from "../Middleware/authMiddleware.js";
 
@@ -24,5 +26,11 @@ router.route("/profile").get(checkToken, getUserProfile);
 
 //endpoint for profile update
 router.route("/profile").put(checkToken, updateUserProfile);
+
+//endpoint for forget password
+router.route("/forgetpassword").post(forgetPassword);
+
+//endpoint for reset password
+router.route("/resetpassword/:token").put(resetPassword);
 
 export default router;

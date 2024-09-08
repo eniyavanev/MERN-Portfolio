@@ -1,16 +1,12 @@
 import User from "../Models/userModel.js";
 import asyncHandler from "express-async-handler";
 import generateToken from "../GenerateToken/generateToken.js";
+import jwt from "jsonwebtoken";
+import { sendResetPasswordLink } from "../GenerateToken/resetpassword.js";
 
 // Signup handler
 const createUser = asyncHandler(async (req, res, next) => {
   const { name, email, password } = req.body;
-
-  // Helper function for sending error responses
-  // const sendErrorResponse = (statusCode, message) => {
-  //   res.status(statusCode);
-  //   return next(new Error(message));
-  // };
 
   // Validate required fields
   if (!name || !email || !password) {
@@ -23,7 +19,7 @@ const createUser = asyncHandler(async (req, res, next) => {
   }
 
   // Validate email format
-  const emailRegex = /^[a-zA-Z0-9_\-\.]+@[a-zA-Z0-9_\-\.]+\.[a-zA-Z]{2,5}$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
   if (!emailRegex.test(email)) {
     return next(new Error("Invalid email format"));
   }
@@ -32,7 +28,7 @@ const createUser = asyncHandler(async (req, res, next) => {
     // Check if user already exists
     const userExists = await User.findOne({ email });
     if (userExists) {
-      return next(new Error("User Already Exists"));
+      return res.status(409).json({ message: "User Already Exists" });
     }
 
     // Create new user
@@ -40,7 +36,7 @@ const createUser = asyncHandler(async (req, res, next) => {
 
     if (newUser) {
       generateToken(res, 201, newUser._id);
-      res.status(201).json({
+      return res.status(201).json({
         _id: newUser._id,
         name: newUser.name,
         email: newUser.email,
@@ -48,10 +44,7 @@ const createUser = asyncHandler(async (req, res, next) => {
       });
     }
   } catch (err) {
-    // Handle server errors
-    res.status(500).json({
-      message: err.message || "Internal Server Error",
-    });
+    return next(err); // Pass the error to the error handler
   }
 });
 
@@ -63,27 +56,28 @@ const loginUser = asyncHandler(async (req, res, next) => {
   if (!email || !password) {
     return next(new Error("Please add all fields"));
   }
+
   const findUser = await User.findOne({ email });
   if (findUser && (await findUser.matchPassword(password))) {
     generateToken(res, 200, findUser._id);
-  } else {
-    return next(new Error("Invalid Email or Password"));
+    return res.status(200).json({
+      _id: findUser._id,
+      name: findUser.name,
+      email: findUser.email,
+      isAdmin: findUser.isAdmin,
+      message: "Login Successful",
+    });
   }
-
-  // Send response
-  res.status(200).json({
-    _id: findUser._id,
-    name: findUser.name,
-    email: findUser.email,
-    isAdmin: findUser.isAdmin,
-    message: "Login Successful",
-  });
+  
+  return next(new Error("Invalid Email or Password"));
 });
 
-//logout handler
-const logoutUser = asyncHandler(async (req, res, next) => {
+// Logout handler
+const logoutUser = asyncHandler(async (req, res) => {
   res.cookie("token", "", {
     httpOnly: true,
+    secure: true,
+    sameSite: "Strict",
     expires: new Date(0),
   });
   res.status(200).json({
@@ -91,10 +85,10 @@ const logoutUser = asyncHandler(async (req, res, next) => {
   });
 });
 
-//get single user profile
-const getUserProfile = asyncHandler(async (req, res, next) => {
+// Get single user profile
+const getUserProfile = asyncHandler(async (req, res) => {
   if (!req.user) {
-    return res.status(401).json({ success: false, message: "User not found" });
+    return res.status(401).json({ success: false, message: "User1 not found" });
   }
 
   const user = {
@@ -107,22 +101,19 @@ const getUserProfile = asyncHandler(async (req, res, next) => {
 });
 
 // Update user profile
-const updateUserProfile = asyncHandler(async (req, res) => {
-  // Destructure values from the request body
+const updateUserProfile = asyncHandler(async (req, res, next) => {
   const { name, email, password } = req.body;
-  // Validate password length
-  if (password.length < 8) {
+
+  if (password && password.length < 8) {
     return next(new Error("Password must be at least 8 characters"));
   }
 
-  // Validate email format
-  const emailRegex = /^[a-zA-Z0-9_\-\.]+@[a-zA-Z0-9_\-\.]+\.[a-zA-Z]{2,5}$/;
-  if (!emailRegex.test(email)) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+  if (email && !emailRegex.test(email)) {
     return next(new Error("Invalid email format"));
   }
 
   const user = await User.findById(req.user._id);
-
   if (!user) {
     return res.status(401).json({
       success: false,
@@ -130,7 +121,6 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     });
   }
 
-  // Update fields if provided
   user.name = name || user.name;
   user.email = email || user.email;
   if (password) {
@@ -148,4 +138,77 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   });
 });
 
-export { createUser, loginUser, logoutUser, getUserProfile, updateUserProfile };
+// Forget password handler
+const forgetPassword = asyncHandler(async (req, res, next) => {
+  const { email } = req.body;
+  if (!email) {
+    return next(new Error("Please add email"));
+  }
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return next(new Error("User not found with this email"));
+  }
+
+  const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET_KEY, {
+    expiresIn: 300,
+  });
+
+  const date = new Date();
+  date.setMinutes(date.getMinutes() + 5);
+  user.reset_password_token = token;
+  user.reset_password_expires = date;
+  await user.save();
+
+  const verificationResult = await sendResetPasswordLink(email, user.name, token);
+
+  if (verificationResult.error) {
+    return next(new Error("Reset password link failed to send"));
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Reset password link sent successfully",
+  });
+});
+
+// Reset password handler
+const resetPassword = asyncHandler(async (req, res, next) => {
+  const { password } = req.body;
+  const { token } = req.params;
+
+  if (!password) {
+    return next(new Error("Please add password"));
+  }
+  if (!token) {
+    return next(new Error("Please add token"));
+  }
+
+  const user = await User.findOne({
+    reset_password_token: token,
+    reset_password_expires: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return next(new Error("User not found with this token"));
+  }
+
+  user.password = password;
+  user.reset_password_token = undefined;
+  user.reset_password_expires = undefined;
+  await user.save();
+  res.status(200).json({
+    success: true,
+    message: "Password reset successfully",
+  });
+});
+
+export {
+  createUser,
+  loginUser,
+  logoutUser,
+  getUserProfile,
+  updateUserProfile,
+  forgetPassword,
+  resetPassword,
+};
