@@ -7,6 +7,7 @@ import {
   updateUserProfile,
   forgetPassword,
   resetPassword,
+  verifyOTP,
 } from "../Controller/userController.js";
 import { checkToken } from "../Middleware/authMiddleware.js";
 
@@ -14,6 +15,9 @@ const router = express.Router();
 
 //endpoint for signup
 router.route("/").post(createUser);
+
+//endpoint for verify otp
+router.route("/verifyotp").post(verifyOTP);
 
 //endpoint for login
 router.route("/login").post(loginUser);

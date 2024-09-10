@@ -8,7 +8,7 @@ dotenv.config();
 // Get current file path and directory
 const currentFilePath = import.meta.url;
 const currentDirectory = dirname(fileURLToPath(currentFilePath));
-console.log(currentDirectory, "Current Directory");
+//console.log(currentDirectory, "Current Directory");
 
 // Config for nodemailer
 const mail = nodemailer.createTransport({
@@ -43,12 +43,12 @@ async function sendResetPasswordLink(email, name, token) {
 
     // Send mail
     const verificationMail = await mail.sendMail(mailOptions);
-    console.log("Email sent: ", verificationMail);
+    //console.log("Email sent: ", verificationMail);
 
     return verificationMail;
   } catch (error) {
     // Log error details
-    console.error("Error sending email: ", error);
+    //console.error("Error sending email: ", error);
     return error;
   }
 }

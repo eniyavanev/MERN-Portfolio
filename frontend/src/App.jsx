@@ -1,16 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Mainbody from "./Components/Mainbody/Mainbody";
+import Home from "./Pages/Home/Home";
+import Error from "./Components/Error-404/Error";
+import Signup from "./Components/Signup/Signup";
 
-function App() {
-  
-
+const App = () => {
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Mainbody />,
+      errorElement: <Error />,
+      children: [
+        {
+          index: true,
+          element: <Home />,
+        },
+        
+      ],
+    },
+    {
+      path:"/signup",
+      element:<Signup/>,
+      errorElement:<Error/>
+    }
+  ]);
   return (
-    <>
-     <h1 className="text-3xl font-bold underline">Vite + React</h1>
-    </>
-  )
-}
+    <div>
+      <RouterProvider router={router} />
+    </div>
+  );
+};
 
-export default App
+export default App;

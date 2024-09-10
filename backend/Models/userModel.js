@@ -20,8 +20,23 @@ const userSchema = new mongoose.Schema(
       required: true,
       default: false,
     },
+
     reset_password_token: { type: String },
     reset_password_expires: Date,
+
+    otp: {
+      default: "", // Initialize with empty string
+      type: String,
+    },
+    otp_expiry: {
+      type: Date,
+    },
+    default_otp: {
+      type: String,
+    },
+    default_otp_expiry: {
+      type: Date,
+    },
   },
   {
     timestamps: true, // Adds createdAt and updatedAt fields automatically
