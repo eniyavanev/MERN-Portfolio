@@ -37,6 +37,10 @@ const userSchema = new mongoose.Schema(
     default_otp_expiry: {
       type: Date,
     },
+    isVerified:{
+      type:Boolean,
+      default:false
+    }
   },
   {
     timestamps: true, // Adds createdAt and updatedAt fields automatically

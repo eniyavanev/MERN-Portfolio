@@ -31,7 +31,9 @@ const createUser = asyncHandler(async (req, res, next) => {
   try {
     const userExists = await User.findOne({ email });
     if (userExists) {
-      return res.status(409).json({ message: "User Already Exists" });
+      return res
+        .status(409)
+        .json({ message: "User Already Exists", success: false });
     }
 
     const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
@@ -48,6 +50,7 @@ const createUser = asyncHandler(async (req, res, next) => {
       otp_expiry: otpExpiration,
       default_otp: defaultOTP,
       default_otp_expiry: otpExpiration,
+      isVerified: false,
     });
 
     if (newUser) {
@@ -80,6 +83,7 @@ const createUser = asyncHandler(async (req, res, next) => {
           name: newUser.name,
           email: newUser.email,
           message: "User Created Successfully. OTP sent to your email.",
+          success: true,
         });
       });
     }
@@ -102,7 +106,9 @@ const verifyOTP = asyncHandler(async (req, res, next) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res
+        .status(404)
+        .json({ message: "User not found", success: false });
     }
 
     // Convert OTP to string for consistent comparison
@@ -121,16 +127,86 @@ const verifyOTP = asyncHandler(async (req, res, next) => {
       user.otp = undefined; // Clear OTP
       user.otp_expiry = undefined; // Clear OTP expiration
 
+      user.default_otp = undefined;
+      user.default_otp_expiry = undefined;
+
       await user.save(); // Save changes
 
-      return res.status(200).json({ message: "OTP verified successfully" });
+      return res.status(200).json({
+        message: `OTP verified successfully ${user.name}`,
+        success: true,
+      });
     } else {
       // OTP is invalid or expired
-      return res.status(400).json({ message: "Invalid or expired OTP" });
+      return res
+        .status(400)
+        .json({ message: "Invalid or expired OTP", success: false });
     }
   } catch (err) {
     //console.error("Error during OTP verification:", err);
     return next(err); // Pass the error to the error handler
+  }
+});
+
+// Resend OTP handler
+const resendOTP = asyncHandler(async (req, res, next) => {
+  const { email } = req.body;
+
+  // Validate required fields
+  if (!email) {
+    return next(new Error("Please provide an email"));
+  }
+
+  try {
+    // Find user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Generate new OTP and set expiration
+    const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
+    const defaultOTP = process.env.DEFAULT_OTP || "123456";
+    const otpToUse =
+      process.env.USE_DEFAULT_OTP === "true" ? defaultOTP : randomOTP;
+    const otpExpiration = new Date(Date.now() + 10 * 60 * 1000); // OTP valid for 10 minutes
+
+    // Update user with new OTP and expiry
+    user.otp = randomOTP;
+    user.default_otp = defaultOTP;
+    user.otp_expiry = otpExpiration;
+    await user.save();
+
+    // Send OTP via email
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.NODEMAILER_USER,
+        pass: process.env.NODEMAILER_PWD,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.NODEMAILER_USER,
+      to: email,
+      subject: "Resent OTP Code",
+      text: `Your new OTP is ${randomOTP}. It will expire in 10 minutes.`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        return next(new Error("Failed to send OTP"));
+      }
+
+      return res.status(200).json({
+        message: "OTP resent successfully. Please check your email.",
+        success: true,
+      });
+    });
+  } catch (err) {
+    return next(err);
   }
 });
 
@@ -144,6 +220,14 @@ const loginUser = asyncHandler(async (req, res, next) => {
   }
 
   const findUser = await User.findOne({ email });
+
+  if (!findUser) {
+    return next(new Error("User not found"));
+  }
+
+  if (!findUser.isVerified) {
+    return next(new Error("Please verify your OTP before logging in"));
+  }
   if (findUser && (await findUser.matchPassword(password))) {
     generateToken(res, 200, findUser._id);
     return res.status(200).json({
@@ -151,7 +235,8 @@ const loginUser = asyncHandler(async (req, res, next) => {
       name: findUser.name,
       email: findUser.email,
       isAdmin: findUser.isAdmin,
-      message: "Login Successful",
+      isVerified: findUser.isVerified,
+      message: "LoggedIn Successful",
     });
   }
 
@@ -188,15 +273,14 @@ const getUserProfile = asyncHandler(async (req, res) => {
 
 // Update user profile
 const updateUserProfile = asyncHandler(async (req, res, next) => {
-  const { name, email, password } = req.body;
+  const { name, password, confirmPassword } = req.body;
 
   if (password && password.length < 8) {
     return next(new Error("Password must be at least 8 characters"));
   }
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-  if (email && !emailRegex.test(email)) {
-    return next(new Error("Invalid email format"));
+  if (password !== confirmPassword) {
+    return next(new Error("Passwords do not match"));
   }
 
   const user = await User.findById(req.user._id);
@@ -208,17 +292,16 @@ const updateUserProfile = asyncHandler(async (req, res, next) => {
   }
 
   user.name = name || user.name;
-  user.email = email || user.email;
   if (password) {
     user.password = password;
   }
 
   const updatedUser = await user.save();
 
-  res.status(200).json({
+  res.status(201).json({
     _id: updatedUser._id,
     name: updatedUser.name,
-    email: updatedUser.email,
+
     isAdmin: updatedUser.isAdmin,
     message: "User updated successfully",
   });
@@ -264,11 +347,15 @@ const forgetPassword = asyncHandler(async (req, res, next) => {
 
 // Reset password handler
 const resetPassword = asyncHandler(async (req, res, next) => {
-  const { password } = req.body;
+  const { password, confirmPassword } = req.body;
   const { token } = req.params;
 
-  if (!password) {
-    return next(new Error("Please add password"));
+  if (!password ) {
+    return next(new Error("Password length is too small"));
+  }
+
+  if (password !== confirmPassword) {
+    return next(new Error("Passwords do not match"));
   }
   if (!token) {
     return next(new Error("Please add token"));
@@ -302,4 +389,5 @@ export {
   forgetPassword,
   resetPassword,
   verifyOTP,
+  resendOTP,
 };

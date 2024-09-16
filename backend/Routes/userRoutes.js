@@ -8,6 +8,7 @@ import {
   forgetPassword,
   resetPassword,
   verifyOTP,
+  resendOTP,
 } from "../Controller/userController.js";
 import { checkToken } from "../Middleware/authMiddleware.js";
 
@@ -18,6 +19,9 @@ router.route("/").post(createUser);
 
 //endpoint for verify otp
 router.route("/verifyotp").post(verifyOTP);
+
+//endpoint for resend otp
+router.route("/resendotp").post(resendOTP);
 
 //endpoint for login
 router.route("/login").post(loginUser);

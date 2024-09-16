@@ -1,0 +1,9 @@
+export const baseUrl = "http://localhost:5000/api";
+export const signUp = "/users";
+export const verifyOtp = "/users/verifyotp";
+export const resendOtp = "/users/resendotp";
+export const login = "/users/login";
+export const logoutc = "/users/logout";
+export const forgotPassword = "/users/forgetpassword";
+export const resetPassword = "/users/resetpassword";
+export const profile = "/users/profile";
