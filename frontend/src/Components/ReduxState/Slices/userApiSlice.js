@@ -6,6 +6,7 @@ import {
   verifyOtp,
   forgotPassword,
   resetPassword,
+  profile,
 } from "../Constant/constants";
 import { logoutc } from "../Constant/constants";
 
@@ -53,17 +54,30 @@ export const userSlice = apiSlice.injectEndpoints({
       }),
     }),
     resetPasswordAPI: builder.mutation({
-      query: ( data, token ) => {
+      query: (data, token) => {
         // Log the data and token here
         console.log("Reset Password API Request Data:", data);
         console.log("Reset Password API Token:", token);
-    
+
         return {
           url: `${resetPassword}/${token}`,
           method: "PUT",
           body: data,
         };
       },
+    }),
+    getProfileAPI: builder.query({
+      query: () => ({
+        url: profile,
+        method: "GET",
+      }),
+    }),
+    updateProfileAPI: builder.mutation({
+      query: (data) => ({
+        url: profile,
+        method: "PUT",
+        body: data,
+      }),
     }),
   }),
 });
@@ -76,4 +90,6 @@ export const {
   useResendOtpAPIMutation,
   useForgotAPIMutation,
   useResetPasswordAPIMutation,
+  useGetProfileAPIQuery,
+  useUpdateProfileAPIMutation,
 } = userSlice;
