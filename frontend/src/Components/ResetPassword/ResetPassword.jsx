@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { isValidPassword } from "../../Utils/Validation";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useResetPasswordAPIMutation } from "../ReduxState/Slices/userApiSlice";
 
 const ResetPassword = () => {
+ const [resetPasswordAPI,{isLoading}] = useResetPasswordAPIMutation();
   // Empty state
   const initialState = {
     password: "",
@@ -48,7 +50,10 @@ const ResetPassword = () => {
   };
 
   const navigate = useNavigate();
-
+  let {token} = useParams();
+  const location = useLocation()
+console.log(location.pathname.split("/")[2]);
+let resetPassword = location.pathname.split("/")[2]
   // Submit
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -56,14 +61,22 @@ const ResetPassword = () => {
     setErrors(newError);
     setSubmitted(true);
     if (handleErrors(newError)) {
-        console.log("Reset Password API Request Data:", inputs);
+      resetPasswordAPI({password:inputs,token}).unwrap().then((data) => {
+        console.log(data);
+           setInputs(initialState);
+        navigate("/login", { replace: true });
+        toast(data.message, {
+          icon: "👍",
+        });
+       
+      })
+        //console.log("Reset Password API Request Data:", inputs);
         
     }
   };
   
 
-const location = useLocation()
-console.log(location);
+
 
   
 

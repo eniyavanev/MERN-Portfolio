@@ -49,7 +49,7 @@ const App = () => {
       element: <ForgetPassword />,
     },
     {
-      path: "/ResetPassword",
+      path: "/ResetPassword/:token",
       element: <ResetPassword />,
     },
     {

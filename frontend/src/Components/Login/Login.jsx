@@ -52,12 +52,14 @@ const Login = () => {
     const { name, value } = event.target;
     setInputs((prevInputs) => ({ ...prevInputs, [name]: value }));
 
-    // Always validate input changes
-    const newError = handleValidation({
-      ...inputs,
-      [name]: value,
-    });
-    setErrors(newError);
+    if (submitted) {
+      // Always validate input changes
+      const newError = handleValidation({
+        ...inputs,
+        [name]: value,
+      });
+      setErrors(newError);
+    }
   };
 
   const handleErrors = (obj) => {
@@ -75,7 +77,7 @@ const Login = () => {
         const data = await loginAPI(inputs).unwrap();
         console.log("data", data);
 
-        if (data.isAdmin === false) {
+        if (data.isVerified === true) {
           dispatch(login(data));
           navigate("/");
           toast(data.message, {
