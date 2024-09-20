@@ -4,11 +4,11 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useResetPasswordAPIMutation } from "../ReduxState/Slices/userApiSlice";
 
 const ResetPassword = () => {
- const [resetPasswordAPI,{isLoading}] = useResetPasswordAPIMutation();
+  const [resetPasswordAPI, { isLoading }] = useResetPasswordAPIMutation();
   // Empty state
   const initialState = {
     password: "",
-    confirmpassword: "",
+    confirmPassword: "",
   };
 
   // Initial state validation
@@ -25,11 +25,11 @@ const ResetPassword = () => {
     if (!isValidPassword(data.password)) {
       error.password = "Password must be at least 8 characters";
     }
-    if (data.confirmpassword === "") {
-      error.confirmpassword = "Confirm Password is required";
+    if (data.confirmPassword === "") {
+      error.confirmPassword = "Confirm Password is required";
     }
-    if (data.password !== data.confirmpassword) {
-      error.confirmpassword = "Password and Confirm Password should match";
+    if (data.password !== data.confirmPassword) {
+      error.confirmPassword = "Password and Confirm Password should match";
     }
     return error;
   };
@@ -50,35 +50,38 @@ const ResetPassword = () => {
   };
 
   const navigate = useNavigate();
-  let {token} = useParams();
-  const location = useLocation()
-console.log(location.pathname.split("/")[2]);
-let resetPassword = location.pathname.split("/")[2]
+  let { token } = useParams();
+  //console.log("Token params:", token);
+
+  const location = useLocation();
+  //console.log(location.pathname.split("/")[2]);
+  let resetPassword = location.pathname.split("/")[2];
   // Submit
   const handleSubmit = (event) => {
     event.preventDefault();
     const newError = handleValidation(inputs);
     setErrors(newError);
     setSubmitted(true);
+
     if (handleErrors(newError)) {
-      resetPasswordAPI({password:inputs,token}).unwrap().then((data) => {
-        console.log(data);
-           setInputs(initialState);
-        navigate("/login", { replace: true });
-        toast(data.message, {
-          icon: "👍",
+      // console.log("Reset Password API Request Data:", inputs);
+      // console.log("Token:", token);
+
+      resetPasswordAPI({ inputs, token }) // Make sure inputs and token are correctly passed
+        .unwrap()
+        .then((data) => {
+          console.log(data);
+          setInputs(initialState);
+          navigate("/login", { replace: true });
+          toast(data.message, {
+            icon: "👍",
+          });
+        })
+        .catch((error) => {
+          console.error("Error resetting password:", error);
         });
-       
-      })
-        //console.log("Reset Password API Request Data:", inputs);
-        
     }
   };
-  
-
-
-
-  
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-purple-600 via-blue-600 to-teal-500">
@@ -91,18 +94,20 @@ let resetPassword = location.pathname.split("/")[2]
           {/* New Password Input */}
           <div className="mb-4">
             <label
-              htmlFor="password"
+              htmlFor="new-password"
               className="block text-gray-700 text-sm font-semibold mb-2"
             >
-              New Password
+              Password
             </label>
             <input
               title="Password must be at least 8 characters"
               type="password"
               name="password"
+              id="new-password"
               className="w-full border-b-2 border-gray-400 py-2 px-4 bg-transparent focus:border-indigo-500 focus:outline-none transition duration-300"
               placeholder="Enter new password"
               onChange={handleChange}
+              autoComplete="off"
               value={inputs.password}
             />
           </div>
@@ -121,15 +126,16 @@ let resetPassword = location.pathname.split("/")[2]
             <input
               title="Password must be at least 8 characters"
               type="password"
-              name="confirmpassword"
+              name="confirmPassword"
               className="w-full border-b-2 border-gray-400 py-2 px-4 bg-transparent focus:border-indigo-500 focus:outline-none transition duration-300"
               placeholder="Confirm new password"
               onChange={handleChange}
-              value={inputs.confirmpassword}
+              autoComplete="off"
+              value={inputs.confirmPassword}
             />
           </div>
-          {errors.confirmpassword && (
-            <p className="text-red-500 text-sm">{errors.confirmpassword}</p>
+          {errors.confirmPassword && (
+            <p className="text-red-500 text-sm">{errors.confirmPassword}</p>
           )}
 
           {/* Submit Button */}
@@ -137,7 +143,7 @@ let resetPassword = location.pathname.split("/")[2]
             type="submit"
             className="w-full bg-indigo-600 text-white py-3 rounded-md hover:bg-indigo-700 transition duration-300"
           >
-            Submit
+            {isLoading ? "Loading..." : "Reset Password"}
           </button>
         </form>
       </div>

@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema(
     reset_password_expires: Date,
 
     otp: {
-      default: "", // Initialize with empty string
+      default: "", 
       type: String,
     },
     otp_expiry: {
@@ -43,7 +43,7 @@ const userSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true, // Adds createdAt and updatedAt fields automatically
+    timestamps: true, 
   }
 );
 
@@ -61,5 +61,8 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-const User = mongoose.model("User", userSchema); // Capitalize "User" to follow naming convention
+const User = mongoose.model("User", userSchema); 
 export default User;
+
+
+

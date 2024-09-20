@@ -63,6 +63,7 @@ const Header = () => {
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-yellow-300 transition-colors"
+            title="GitHub"
           >
             <FaGithub size={24} />
           </a>
@@ -71,6 +72,7 @@ const Header = () => {
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-yellow-300 transition-colors"
+            title="LinkedIn"
           >
             <FaLinkedin size={24} />
           </a>
