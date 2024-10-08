@@ -1,9 +1,11 @@
 import React from 'react'
 
-const Footer = () => {
+const Footer = ({darkMode,setDarkMode}) => {
   return (
-    <div>
-      Footer
+    <div className={darkMode ? "dark" : ""}>
+     <div className="dark:bg-gray-900 dark:text-white text-center">
+        <p>Eniyavan Portfolio<b>© 2022 Copyright</b></p>
+     </div>
     </div>
   )
 }

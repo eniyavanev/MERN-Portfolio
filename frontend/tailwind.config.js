@@ -1,11 +1,17 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  darkMode: "class",
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        ink: "#001B48",
+        sketch: "#02457A",
+        tshirt: "#018ABE",
+        soap: "#97CADB",
+        light: "#D6E8EE",
+      },
+    },
   },
   plugins: [],
-}
+};

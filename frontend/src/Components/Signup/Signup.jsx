@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import BgImage from "../../assets/Images/LoginPage-bg.jpg";
+import BgImage from "../../assets/Images/bg-light.png";
 import { MdRemoveRedEye } from "react-icons/md";
 import { IoMdEyeOff } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";

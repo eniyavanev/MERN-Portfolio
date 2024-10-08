@@ -1,3 +1,33 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.header_img{
+    animation: profile_animate 8s ease-in-out infinite 1s;
+}
+@keyframes profile_animate {
+    0% {
+      border-radius: 60% 40% 30% 70%/60% 30% 70% 40%;
+    }
+    50% {
+      border-radius: 30% 60% 70% 40%/50% 60% 30% 60%;
+    }
+    100% {
+      border-radius: 60% 40% 30% 70%/60% 30% 70% 40%;
+    }
+  }
+  @keyframes infiniteSlide {
+    0% {
+        transform: translateX(0); /* Start position */
+    }
+    50% {
+        transform: translateX(10px); /* Slide right */
+    }
+    100% {
+        transform: translateX(0); /* Return to start position */
+    }
+}
+
+.image {
+    animation: infiniteSlide 1s ease-in-out infinite; /* Slide every second */
+}
