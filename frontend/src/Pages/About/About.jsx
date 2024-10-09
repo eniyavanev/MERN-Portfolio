@@ -119,7 +119,7 @@ const About = () => {
 
                   <a
                     download="Resume_Eniyavan.pdf"
-                    href="/Eniyavan Frontend.pdf"
+                    href="Resume.pdf"
                   >
                     <button
                       className="w-[150px] rounded-md flex flex-row items-center gap-1 
