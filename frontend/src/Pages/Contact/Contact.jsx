@@ -12,17 +12,17 @@ const Contact = () => {
   const sendEmail = (e) => {
     e.preventDefault();
 
-    // Get form values
+    // Form Validation for Gmail
     const formData = new FormData(e.target);
     const email = formData.get("from_email");
-
-    // Email validation regex
     const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+
     if (!emailRegex.test(email)) {
       Swal.fire("Error", "Please enter a valid Gmail address.", "error");
       return;
     }
 
+    // Sending email using emailjs
     emailjs
       .sendForm(
         "service_2svzjzo",
@@ -36,152 +36,118 @@ const Contact = () => {
           e.target.reset();
         },
         (error) => {
-          Swal.fire(
-            "Error",
-            "Something went wrong. Please try again.",
-            "error"
-          );
+          Swal.fire("Error", "Something went wrong. Please try again.", "error");
         }
       );
   };
 
   useEffect(() => {
-    Aos.init({
-      offset: 200,
-      duration: 600,
-      easing: "ease-in-out",
-      once: true,
-    });
+    Aos.init({ offset: 200, duration: 600, easing: "ease-in-out", once: true });
   }, []);
 
   return (
-    <>
-      <div className="bg-gray-200 min-h-screen dark:bg-gray-800 px-[4%] pt-16">
-        <div>
-          <Heading title="Contact" detail={"Get In Touch"} />
-        </div>
+    <div className="bg-gray-200 dark:bg-gray-800 min-h-screen pt-16">
+      <div>
+        <Heading title="Contact" detail="Get In Touch" />
+      </div>
 
-        {/* Contact Form and Info Section */}
-        <div className="flex items-center justify-center pt-10">
-          <div
-            className="flex flex-col md:flex-row bg-white dark:bg-gray-100  shadow-lg rounded-xl max-w-5xl w-full"
-            data-aos="fade-up"
-          >
-            {/* Left Side - Personal Information */}
-            <div
-              className="md:w-1/2 bg-sketch dark:bg-tshirt text-white p-8 rounded-l-xl max-md:order-2 max-md:rounded-l-none"
-              data-aos="fade-right"
-            >
-              <h2 className="text-3xl font-bold mb-6 dark:text-gold">
-                Get In Touch
-              </h2>
-              <p className="mb-4">
-                Hi! I'm <span className="font-bold">Eniyavan Arumugam</span>,
-                feel free to reach out to me.
-              </p>
-              <ul className="space-y-4">
-                <li className="flex items-center">
-                  <FaPhoneAlt className="mr-3" /> <span>+91 8940650248.</span>
-                </li>
-                <li className="flex items-center">
-                  <FaEnvelope className="mr-3" />
-                  <span>eniyavanev@gmail.com.</span>
-                </li>
-                <li className="flex items-center">
-                  <FaMapMarkerAlt className="mr-3" />
-                  <span>Banglore, India.</span>
-                </li>
-              </ul>
-              <p className="mt-6">
-                I'm passionate about creating high-quality projects, let's build
-                something amazing together!
-              </p>
-            </div>
+      {/* Container for the form and contact details */}
+      <div className="flex justify-center pt-10 px-4">
+        <div className="flex flex-col md:flex-row w-full max-w-4xl bg-white dark:bg-gray-100 shadow-lg rounded-lg overflow-hidden">
+          
+          {/* Left Side - Contact Info */}
+          <div className="w-full md:w-1/2 bg-sketch dark:bg-tshirt text-white p-8 flex flex-col justify-center">
+            <h2 className="text-3xl font-bold mb-6 dark:text-gold">Get In Touch</h2>
+            <p className="mb-4">
+              Hi! I'm <span className="font-bold">Eniyavan Arumugam</span>, feel free to reach out to me.
+            </p>
+            <ul className="space-y-4">
+              <li className="flex items-center">
+                <FaPhoneAlt className="mr-3" /> <span>+91 8940650248</span>
+              </li>
+              <li className="flex items-center">
+                <FaEnvelope className="mr-3" /> <span>eniyavanev@gmail.com</span>
+              </li>
+              <li className="flex items-center">
+                <FaMapMarkerAlt className="mr-3" /> <span>Bangalore, India</span>
+              </li>
+            </ul>
+            <p className="mt-6">
+              I'm passionate about creating high-quality projects, let's build something amazing together!
+            </p>
+          </div>
 
-            {/* Right Side - Contact Form */}
-            <div className="md:w-1/2 p-8" data-aos="fade-left">
-              <h2 className="text-2xl font-bold text-sketch dark:text-tshirt text-center mb-8">
-                Send a Message
-              </h2>
-              <form ref={form} onSubmit={sendEmail} className="space-y-6">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700">
-                    Your Name
-                  </label>
-                  <input
-                    type="text"
-                    name="from_name"
-                    required
-                    autoComplete="off"
-                    className="w-full px-4 py-2 mt-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sketch dark:focus:ring-tshirt"
-                    placeholder="Enter your name"
-                  />
-                </div>
+          {/* Right Side - Contact Form */}
+          <div className="w-full md:w-1/2 p-8">
+            <h2 className="text-2xl font-bold text-sketch dark:text-tshirt text-center mb-8">
+              Send a Message
+            </h2>
+            <form ref={form} onSubmit={sendEmail} className="space-y-6">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700">
+                  Your Name
+                </label>
+                <input
+                  type="text"
+                  name="from_name"
+                  required
+                  className="w-full px-4 py-2 mt-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sketch dark:focus:ring-tshirt"
+                  placeholder="Enter your name"
+                />
+              </div>
 
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700">
-                    Mobile Number
-                  </label>
-                  <input
-                    type="number" // Changed to text to validate length properly
-                    name="from_number"
-                    required
-                    autoComplete="off"
-                    maxLength={10}
-                    pattern="\d{10}" // Regex pattern for exactly 10 digits
-                    className="w-full px-4 py-2 mt-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sketch dark:focus:ring-tshirt"
-                    placeholder="Enter your mobile number"
-                  />
-                  <p className="text-red-500 text-xs mt-1 hidden">
-                    Please enter a valid 10-digit mobile number.
-                  </p>{" "}
-                  {/* Error message */}
-                </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700">
+                  Mobile Number
+                </label>
+                <input
+                  type="text"
+                  name="from_number"
+                  required
+                  maxLength={10}
+                  pattern="\d{10}"
+                  className="w-full px-4 py-2 mt-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sketch dark:focus:ring-tshirt"
+                  placeholder="Enter your mobile number"
+                />
+              </div>
 
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700">
-                    Email Address
-                  </label>
-                  <input
-                    type="email"
-                    name="from_email"
-                    required
-                    className="w-full px-4 py-2 mt-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sketch dark:focus:ring-tshirt"
-                    placeholder="Enter your email address"
-                    autoComplete="off"
-                  />
-                  <p className="text-red-500 text-xs mt-1 hidden">
-                    Please enter a valid Gmail address.
-                  </p>{" "}
-                  {/* Error message */}
-                </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  name="from_email"
+                  required
+                  className="w-full px-4 py-2 mt-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sketch dark:focus:ring-tshirt"
+                  placeholder="Enter your email address"
+                />
+              </div>
 
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700">
-                    Message
-                  </label>
-                  <textarea
-                    name="message"
-                    required
-                    rows="4"
-                    className="w-full px-4 py-2 mt-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sketch dark:focus:ring-tshirt"
-                    placeholder="Write your message here"
-                    autoComplete="off"
-                  ></textarea>
-                </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700">
+                  Message
+                </label>
+                <textarea
+                  name="message"
+                  required
+                  rows="4"
+                  className="w-full px-4 py-2 mt-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sketch dark:focus:ring-tshirt"
+                  placeholder="Write your message here"
+                ></textarea>
+              </div>
 
-                <button
-                  type="submit"
-                  className="w-full px-6 py-2 text-white bg-sketch rounded-md dark:bg-tshirt"
-                >
-                  Send Message
-                </button>
-              </form>
-            </div>
+              <button
+                type="submit"
+                className="w-full px-6 py-2 text-white bg-sketch rounded-md dark:bg-tshirt"
+              >
+                Send Message
+              </button>
+            </form>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
