@@ -46,7 +46,7 @@ const Contact = () => {
   }, []);
 
   return (
-    <div className="bg-gray-200 dark:bg-gray-800 min-h-screen pt-16">
+    <div className="bg-gray-200 dark:bg-gray-800 max-sm:min-h-screen pt-16">
       <div>
         <Heading title="Contact" detail="Get In Touch" />
       </div>

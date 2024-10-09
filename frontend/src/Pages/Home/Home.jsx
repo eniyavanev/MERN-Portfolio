@@ -61,7 +61,7 @@ const Home = ({ darkMode, setDarkMode }) => {
       )}
       <section id="Home" className="relative ">
         <div
-          className="w-full min-h-screen bg-cover  bg-center bg-fixed"
+          className="w-full max-sm:min-h-screen  bg-cover  bg-center bg-fixed"
           style={{
             backgroundImage: `url(${backgroundImage})`,
             backgroundAttachment: "fixed",
