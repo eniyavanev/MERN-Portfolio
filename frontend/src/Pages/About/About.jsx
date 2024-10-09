@@ -72,7 +72,7 @@ const About = () => {
                     {aboutData.map((item, index) => (
                       <div
                         key={index}
-                        className="flex flex-col  items-center space-y-0 text-center py-3 px-4 sm:py-4 sm:px-8 border rounded-lg"
+                        className="flex flex-col  items-center space-y-0 text-center py-3 px-2 sm:py-4 sm:px-8 border rounded-lg"
                       >
                         <h1>{item.icon}</h1>
                         <h2 className="text-gray-800 font-semibold text-[13px]">
