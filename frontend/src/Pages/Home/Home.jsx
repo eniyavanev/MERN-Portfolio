@@ -130,7 +130,7 @@ const Home = ({ darkMode, setDarkMode }) => {
                 <img
                   src={darkMode ? darkImg : lightImg}
                   alt="Eniyavan"
-                  className="mx-auto rounded-full w-[550px]  md:h-[300px] lg:h-[550px]   "
+                  className="mx-auto rounded-full w-[550px] md:w-[300px] md:h-[300px] lg:w-[550px] lg:h-[550px]   "
                 />
               </div>
             </div>
