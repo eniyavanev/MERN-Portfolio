@@ -119,7 +119,8 @@ const About = () => {
 
                   <a
                     download="Resume_Eniyavan.pdf"
-                    href="Resume.pdf"
+                    href="/Resume.pdf"
+                    target="_blank"
                   >
                     <button
                       className="w-[150px] rounded-md flex flex-row items-center gap-1 
