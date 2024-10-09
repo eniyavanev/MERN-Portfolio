@@ -3,36 +3,40 @@ import Aos from "aos";
 import "aos/dist/aos.css";
 import { FaUserGraduate } from "react-icons/fa";
 import { education } from "../../Components/Data/Data";
+import Heading from "../../Components/ResuableComponents/Heading/Heading";
 
 const Card = (props) => {
   return (
     <div
-      className="flex flex-row gap-10 mx-auto max-w-[500px] p-5"
+      className="flex flex-col bg-white border border-gray-300 rounded-lg shadow-lg transition-transform transform mb-2 hover:scale-105 dark:bg-tshirt dark:border-gray-800"
       data-aos="fade-up"
     >
-      <div className="p-0.5 mt-1 bg-gray-800 rounded-full"></div>
-
-      <div className="p-3 absolute drop-shadow-md ml-[-17px] bg-gray-800 rounded-full">
-        <FaUserGraduate color="white" />
-      </div>
-
-      <div className="flex flex-col">
-        <h1 className="font-bold text-[20px] md:text-xl">{props.course}</h1>
-        <p className="text-cyan-600 font-semibold">{props.college}</p>
-        <p className="text-[14px]">{`Percentage ${props.percentage}%`}</p>
-        <p className="text-[14px]">{props.year}</p>
-        <p className="text-gray-500 text-[13px]">{props.summary}</p>
-      </div>
-      <div className="hidden md:block mt-0 w-20 h-20">
+      <div className="relative w-full h-32">
         <img
           src={props.img}
-          alt="Error"
-          className="w-11 h-11 bg-contain bg-center mx-auto"
+          alt="Course Image"
+          className="absolute inset-0 w-full h-full object-cover rounded-t-lg"
         />
+        <div className="absolute inset-0 bg-black opacity-30 rounded-t-lg"></div>
+        <div className="absolute top-2 left-4 p-2 bg-sketch rounded-full dark:bg-gold">
+          <FaUserGraduate className="text-white text-2xl " />
+        </div>
+      </div>
+
+      <div className="p-5">
+        <h1 className="font-bold text-lg md:text-xl dark:text-gold">
+          {props.course}
+        </h1>
+        <p className="text-sketch font-semibold dark:text-white">
+          {props.college}
+        </p>
+        <p className="text-sm font-bold dark:text-gold">{props.year}</p>
+        <p className="text-black text-sm dark:text-white">{props.summary}</p>
       </div>
     </div>
   );
 };
+
 const Education = () => {
   useEffect(() => {
     Aos.init({
@@ -42,38 +46,29 @@ const Education = () => {
       delay: 100,
       offset: 200,
     });
-  });
+  }, []);
+
   return (
     <div>
-      <section id="Education" className="bg-white w-full pt-20 sm:pt-24 px-5">
-        <div className="max-w-[968px] mx-auto text-center">
-          <h1 className="font-bold text-3xl md:text-5xl text-gray-800 font-serif">
-            Education
-          </h1>
-          <div className="w-full flex flex-row gap-x-3 items-center justify-center mt-3">
-            <div className="w-[50px] h-1 bg-cyan-500 rounded-md"></div>
-            <h1 className="text-[#fc036f] font-semibold text-center">
-              What I Doing
-            </h1>
-            <div className="w-[50px] h-1 bg-cyan-500 rounded-md"></div>
-          </div>
+      <section
+        id="Education"
+        className="bg-gray-200 dark:bg-gray-800 shadow-lg w-full pt-16 sm:pt-24 px-5"
+      >
+        <div>
+          <Heading title="Education" detail={"What I Study"} />
         </div>
-        <div className="max-w-[600px] mx-auto">
-          <div className="flex flex-col">
-            {education.map((ele) => (
-              <>
-                <Card
-                  key={ele.id}
-                  course={ele.course}
-                  year={ele.year}
-                  summary={ele.summary}
-                  college={ele.college}
-                  img={ele.image}
-                  percentage={ele.percentage}
-                />
-              </>
-            ))}
-          </div>
+
+        <div className="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
+          {education.map((ele) => (
+            <Card
+              key={ele.id}
+              course={ele.course}
+              year={ele.year}
+              summary={ele.summary}
+              college={ele.college}
+              img={ele.image}
+            />
+          ))}
         </div>
       </section>
     </div>

@@ -31,3 +31,7 @@
 .image {
     animation: infiniteSlide 1s ease-in-out infinite; /* Slide every second */
 }
+
+::-webkit-scrollbar{
+    display: none;
+}

@@ -3,14 +3,16 @@ import { ReactTyped } from "react-typed";
 import { FiAward } from "react-icons/fi";
 import { BiBriefcase, BiDesktop } from "react-icons/bi";
 
-import about from "../../assets/Images/About.jpg";
-import aditya from "../../assets/Images/img-2.png";
+
+import Ev from "../../assets/Images/img-2.png";
 
 /* Import Aos Libraray for Move the content */
 import Aos from "aos";
 import "aos/dist/aos.css";
 
 import { RiDownloadCloudFill } from "react-icons/ri";
+import Heading from "../../Components/ResuableComponents/Heading/Heading";
+import { aboutData } from "../../Components/Data/Data";
 
 const About = () => {
   React.useEffect(() => {
@@ -26,29 +28,15 @@ const About = () => {
   return (
     <>
       <section id="About" className="">
-        <div className="w-full relative">
-          <img
-            src={about}
-            alt="error"
-            className="mx-auto absolute w-full h-full bg-center bg-cover"
-          />
-
+        <div className="w-full relative ">
           {/* Background Image above Opacity */}
-          <div className="bg-black absolute w-full h-full opacity-80"></div>
+          <div className=" absolute w-full h-full opacity-50 dark:bg-gray-800"></div>
 
           {/* Image Above about-me section */}
-          <div className="w-full mx-auto relative py-16 md:py-20 px-2 ">
+          <div className="bg-gray-200 w-full mx-auto relative py-16 md:py-20 px-2 dark:bg-gray-800">
             {/* About me design */}
-            <div className="max-w-[300px] mx-auto p-5 text-center">
-              <h1 className="font-bold text-3xl tab:text-5xl md:text-4xl text-white font-serif">
-                About me
-              </h1>
-
-              <div className="w-[200px] mx-auto flex flex-row gap-x-3 items-center">
-                <div className="w-[50px] h-1 bg-cyan-500 rounded-md"></div>
-                <h1 className="text-[#fc036f] font-semibold">Who am I</h1>
-                <div className="w-[50px] h-1 bg-cyan-500 rounded-md"></div>
-              </div>
+            <div>
+              <Heading title="About Me" detail={"Know Me More"} />
             </div>
             {/* End About-me design */}
 
@@ -57,7 +45,7 @@ const About = () => {
               {/* About-me flex part section*/}
               <div
                 className="max-w-[1250px] flex flex-col lg:flex-row gap-y-3 md:gap-x-11 mx-auto py-3 items-center 
-                        rounded-lg shadow-lg bg-white "
+                        rounded-lg shadow-lg bg-white dark:bg-tshirt "
               >
                 {/* flex-1 (Images) */}
                 <div
@@ -65,7 +53,7 @@ const About = () => {
                   data-aos="fade-up"
                 >
                   <img
-                    src={aditya}
+                    src={Ev}
                     alt="Error!"
                     className="bg-center bg-cover rounded-lg"
                   />
@@ -81,49 +69,31 @@ const About = () => {
                     className="flex flex-row space-x-3 items-center justify-center"
                     data-aos="zoom-out-up"
                   >
-                    <div className="flex flex-col items-center space-y-0 text-center py-3 px-4 sm:py-4 sm:px-8 border rounded-lg">
-                      <h1>
-                        <FiAward size={20} color="#fc036f" />
-                      </h1>
-                      <h1 className="text-gray-800 font-semibold text-[13px]">
-                        Experience
-                      </h1>
-                      <h2 className="text-gray-500 text-[11px]">1+ Year's</h2>
-                    </div>
-
-                    <div className="flex flex-col items-center space-y-0 text-center py-3 px-4 sm:py-4 sm:px-8 border rounded-lg">
-                      <h1>
-                        <BiBriefcase size={22} color="#fc036f" />
-                      </h1>
-                      <h1 className="text-gray-800 font-semibold text-[13px]">
-                        Completed
-                      </h1>
-                      <h2 className="text-gray-500 text-[11px]">
-                        2 Project's +
-                      </h2>
-                    </div>
-
-                    <div className="flex flex-col items-center space-y-0 text-center py-3 px-4 sm:py-4 sm:px-6 border rounded-lg">
-                      <h1>
-                        <BiDesktop size={22} color="#fc036f" />
-                      </h1>
-                      <h1 className="text-gray-800 font-semibold text-[13px]">
-                        Learning
-                      </h1>
-                      <h2 className="text-gray-500 text-[11px]">
-                        AWS,React-Native
-                      </h2>
-                    </div>
+                    {aboutData.map((item, index) => (
+                      <div
+                        key={index}
+                        className="flex flex-col  items-center space-y-0 text-center py-3 px-4 sm:py-4 sm:px-8 border rounded-lg"
+                      >
+                        <h1>{item.icon}</h1>
+                        <h2 className="text-gray-800 font-semibold text-[13px]">
+                          {item.title}
+                        </h2>
+                        <h3 className="text-gray-500 text-[11px] dark:text-white">
+                          {item.description}
+                        </h3>
+                      </div>
+                    ))}
                   </div>
                   {/* End of Experience, Completed & Learning Design Section */}
 
-                  <h1 className="flex flex-col sm:flex-row font-bold text-[25px] md:text-2xl tab:text-[33px] text-gray-800 text-left font antialiased">
+                 <div className="hidden sm:block">
+                 <div className="flex flex-col  sm:flex-row font-bold text-[25px] md:text-2xl tab:text-[33px] text-ink text-left dark:text-white">
                     Hey, I'm Eniyavan and I'm a
-                    <h1>
+                    <h2>
                       {" "}
                       &nbsp;
                       <ReactTyped
-                        className="text-cyan-500 text-[25px] md:text-2xl tab:text-[33px] font antialiased font-bold"
+                        className="text-sketch dark:text-gold text-[25px] md:text-2xl tab:text-[33px] font antialiased font-bold"
                         strings={[
                           " React Developer",
                           " Frontend Developer",
@@ -133,9 +103,10 @@ const About = () => {
                         backSpeed={60}
                         loop
                       />
-                    </h1>
-                  </h1>
-                  <p className="mt-3 md:text-[15px] leading-6 sm:pr-5 first-letter:text-3xl first-letter:font-semibold">
+                    </h2>
+                  </div>
+                 </div>
+                  <p className="mt-3 md:text-[15px] leading-6 sm:pr-5 dark:first-letter:text-gold first-letter:text-3xl first-letter:text-sketch first-letter:font-semibold dark:text-white">
                     I am Eniyavan Arumugam from Banglore, currently I'm working
                     as a Software Developer and I have 1+ years hands on
                     experience in Frontend Develoment. I have solid
@@ -153,7 +124,7 @@ const About = () => {
                   >
                     <button
                       className="w-[150px] rounded-md flex flex-row items-center gap-1 
-                font-medium my-5 py-3 text-white px-1 bg-tshirt  hover:bg-sketch shadow-lg shadow-soap text-[17px]"
+                font-medium my-5 py-3 text-white px-1 bg-sketch   hover:bg-tshirt shadow-lg shadow-soap text-[17px] dark:bg-gold"
                     >
                       <RiDownloadCloudFill className="ml-2" />
                       Download CV

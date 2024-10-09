@@ -10,6 +10,7 @@ export default {
         tshirt: "#018ABE",
         soap: "#97CADB",
         light: "#D6E8EE",
+        gold:"#FFD700",
       },
     },
   },
