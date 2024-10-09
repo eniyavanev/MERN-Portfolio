@@ -3,7 +3,6 @@ import { ReactTyped } from "react-typed";
 import { FiAward } from "react-icons/fi";
 import { BiBriefcase, BiDesktop } from "react-icons/bi";
 
-
 import Ev from "../../assets/Images/img-2.png";
 
 /* Import Aos Libraray for Move the content */
@@ -86,26 +85,26 @@ const About = () => {
                   </div>
                   {/* End of Experience, Completed & Learning Design Section */}
 
-                 <div className="hidden sm:block">
-                 <div className="flex flex-col  sm:flex-row font-bold text-[25px] md:text-2xl tab:text-[33px] text-ink text-left dark:text-white">
-                    Hey, I'm Eniyavan and I'm a
-                    <h2>
-                      {" "}
-                      &nbsp;
-                      <ReactTyped
-                        className="text-sketch dark:text-gold text-[25px] md:text-2xl tab:text-[33px] font antialiased font-bold"
-                        strings={[
-                          " React Developer",
-                          " Frontend Developer",
-                          " MERN Developer",
-                        ]}
-                        typeSpeed={90}
-                        backSpeed={60}
-                        loop
-                      />
-                    </h2>
+                  <div className="hidden sm:block">
+                    <div className="flex flex-col  sm:flex-row font-bold text-[25px] md:text-2xl tab:text-[33px] text-ink text-left dark:text-white">
+                      Hey, I'm Eniyavan and I'm a
+                      <h2>
+                        {" "}
+                        &nbsp;
+                        <ReactTyped
+                          className="text-sketch dark:text-gold text-[25px] md:text-2xl tab:text-[33px] font antialiased font-bold"
+                          strings={[
+                            " React Developer",
+                            " Frontend Developer",
+                            " MERN Developer",
+                          ]}
+                          typeSpeed={90}
+                          backSpeed={60}
+                          loop
+                        />
+                      </h2>
+                    </div>
                   </div>
-                 </div>
                   <p className="mt-3 md:text-[15px] leading-6 sm:pr-5 dark:first-letter:text-gold first-letter:text-3xl first-letter:text-sketch first-letter:font-semibold dark:text-white">
                     I am Eniyavan Arumugam from Banglore, currently I'm working
                     as a Software Developer and I have 1+ years hands on
@@ -120,11 +119,11 @@ const About = () => {
 
                   <a
                     download="Resume_Eniyavan.pdf"
-                    href="../../../src/assets/Documents/Eniyavan Frontend.pdf"
+                    href="/Eniyavan Frontend.pdf"
                   >
                     <button
                       className="w-[150px] rounded-md flex flex-row items-center gap-1 
-                font-medium my-5 py-3 text-white px-1 bg-sketch   hover:bg-tshirt shadow-lg shadow-soap text-[17px] dark:bg-gold"
+    font-medium my-5 py-3 text-white px-1 bg-sketch hover:bg-tshirt shadow-lg shadow-soap text-[17px] dark:bg-gold"
                     >
                       <RiDownloadCloudFill className="ml-2" />
                       Download CV
